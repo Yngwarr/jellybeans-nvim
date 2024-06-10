@@ -98,6 +98,7 @@ local calypso = hsl("#2B5B77")
 local theme = lush(function(injected_functions)
 	local sym = injected_functions.sym
 
+	---@diagnostic disable: undefined-global
 	return {
 		-- The following are all the Neovim default highlight groups from the docs
 		-- as of 0.5.0-nightly-446, to aid your theme creation. Your themes should
@@ -111,64 +112,126 @@ local theme = lush(function(injected_functions)
 		-- styling for that group (meaning they mostly get styled as Normal)
 		-- or leave them commented to apply vims default colouring or linking.
 
-		Comment({ fg = grey }), -- any comment
-		ColorColumn({ bg = total_black }), -- used for the columns set with 'colorcolumn'
-		Conceal({ fg = morning_glory }), -- placeholder characters substituted for concealed text (see 'conceallevel')
-		Cursor({ fg = background, bg = perano }), -- character under the cursor
+		-- normal text
+		Normal({ bg = background, fg = foreground }),
+		-- any comment
+		Comment({ fg = grey }),
+		-- used for the columns set with 'colorcolumn'
+		ColorColumn({ bg = total_black }),
+		-- placeholder characters substituted for concealed text (see 'conceallevel')
+		Conceal({ fg = morning_glory }),
+		-- character under the cursor
+		Cursor({ fg = background, bg = perano }),
 		-- lCursor      { }, -- the character under the cursor when |language-mapping| is used (see 'guicursor')
 		-- CursorIM     { }, -- like Cursor, but used when in IME mode |CursorIM|
-		CursorColumn({ bg = grey_one }), -- Screen-column at the cursor, when 'cursorcolumn' is set.
-		CursorLine({ bg = grey_one }), -- Screen-line at the cursor, when 'cursorline' is set.  Low-priority if foreground (ctermfg OR guifg) is not set.
-		Directory({ fg = brandy }), -- directory names (and other special names in listings)
-		DiffAdd({ fg = tea_green, bg = dell }), -- diff mode: Added line |diff.txt|
-		DiffChange({ bg = calypso }), -- diff mode: Changed line |diff.txt|
-		DiffDelete({ fg = temptress, bg = purple }), -- diff mode: Deleted line |diff.txt|
-		DiffText({ fg = morning_glory, bg = total_black }), -- diff mode: Changed text within a changed line |diff.txt|
-		-- EndOfBuffer  { }, -- filler lines (~) after the end of the buffer.  By default, this is highlighted like |hl-NonText|.
-		-- TermCursor   { }, -- cursor in a focused terminal
-		-- TermCursorNC { }, -- cursor in an unfocused terminal
-		ErrorMsg({ bg = old_brick }), -- error messages on the command line
-		VertSplit({ fg = gravel }), -- the column separating vertically split windows (deprecated)
-		WinSeparator({ fg = gravel }), -- the line separating split windows
-		Folded({ fg = grey_chateau, bg = bright_grey }), -- line used for closed folds
-		FoldColumn({ fg = shuttle_grey, bg = mine_shaft }), -- 'foldcolumn'
-		SignColumn({ fg = boulder }), -- column where |signs| are displayed
-		-- IncSearch    { }, -- 'incsearch' highlighting; also used for the text replaced with ":s///c"
+		-- Screen-column at the cursor, when 'cursorcolumn' is set.
+		CursorColumn({ bg = grey_one }),
+		-- Screen-line at the cursor, when 'cursorline' is set.  Low-priority if foreground (ctermfg OR guifg) is not set.
+		CursorLine({ bg = grey_one }),
+		-- directory names (and other special names in listings)
+		Directory({ fg = brandy }),
+		-- diff mode: Added line |diff.txt|
+		DiffAdd({ fg = tea_green, bg = dell }),
+		-- diff mode: Changed line |diff.txt|
+		DiffChange({ bg = calypso }),
+		-- diff mode: Deleted line |diff.txt|
+		DiffDelete({ fg = temptress, bg = purple }),
+		-- diff mode: Changed text within a changed line |diff.txt|
+		DiffText({ fg = morning_glory, bg = total_black }),
+		-- filler lines (~) after the end of the buffer.  By default, this is highlighted like |hl-NonText|.
+		-- EndOfBuffer  { },
+		-- cursor in a focused terminal
+		-- TermCursor   { },
+		-- cursor in an unfocused terminal
+		-- TermCursorNC { },
+		-- error messages on the command line
+		ErrorMsg({ bg = old_brick }),
+		-- the column separating vertically split windows (deprecated)
+		VertSplit({ fg = gravel }),
+		-- the line separating split windows
+		WinSeparator({ fg = gravel }),
+		-- line used for closed folds
+		Folded({ fg = grey_chateau, bg = bright_grey }),
+
+		TabLine({ Folded }),
+		WinBar({ fg = grey, bg = CursorLine.bg }),
+		WinBarNC({ fg = WinBar.fg, bg = Normal.bg }),
+
+		-- 'foldcolumn'
+		FoldColumn({ fg = shuttle_grey, bg = mine_shaft }),
+		-- column where |signs| are displayed
+		SignColumn({ fg = boulder }),
+		-- Last search pattern highlighting (see 'hlsearch').  Also used for similar items that need to stand out.
+		Search({ fg = wewak, bg = cocoa_brown }),
+		CurSearch({ Search, gui = "underline" }),
+		-- 'incsearch' highlighting; also used for the text replaced with ":s///c"
+		IncSearch({ Search }),
 		-- Substitute   { }, -- |:substitute| replacement text highlighting
-		LineNr({ fg = zambezi }), -- Line number for ":number" and ":#" commands, and when 'number' or 'relativenumber' option is set.
-		CursorLineNr({ fg = silver_rust }), -- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line.
-		MatchParen({ fg = wewak, gui = "bold" }), -- The character under the cursor or just before it, if it is a paired bracket, and its match. |pi_paren.txt|
+		-- Line number for ":number" and ":#" commands, and when 'number' or 'relativenumber' option is set
+		LineNr({ fg = zambezi }),
+		-- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line.
+		CursorLineNr({ fg = silver_rust }),
+		-- The character under the cursor or just before it, if it is a paired bracket, and its match. |pi_paren.txt|
+		MatchParen({ fg = wewak, gui = "bold" }),
 		-- ModeMsg      { }, -- 'showmode' message (e.g., "-- INSERT -- ")
 		-- MsgArea      { }, -- Area for messages and cmdline
 		-- MsgSeparator { }, -- Separator for scrolled messages, `msgsep` flag of 'display'
-		MoreMsg({ fg = highland }), -- |more-prompt|
-		NonText({ fg = scorpion }), -- '@' at the end of the window, characters from 'showbreak' and other characters that do not really exist in the text (e.g., ">" displayed when a double-wide character doesn't fit at the end of the line). See also |hl-EndOfBuffer|.
-		Normal({ bg = background, fg = foreground }), -- normal text
-		-- NormalFloat  { }, -- Normal text in floating windows.
-		-- NormalNC     { }, -- normal text in non-current windows
-		Pmenu({ fg = total_white, bg = background.lighten(4) }), -- Popup menu: normal item.
-		PmenuSel({ fg = total_black, bg = ship_cove, gui = "bold" }), -- Popup menu: selected item.
-		-- PmenuSbar    { }, -- Popup menu: scrollbar.
-		-- PmenuThumb   { }, -- Popup menu: Thumb of the scrollbar.
-		Question({ fg = mantis }), -- |hit-enter| prompt and yes/no questions
-		QuickFixLine({ bg = bright_grey }), -- Current |quickfix| item in the quickfix window. Combined with |hl-CursorLine| when the cursor is there.
-		Search({ fg = wewak, bg = cocoa_brown }), -- Last search pattern highlighting (see 'hlsearch').  Also used for similar items that need to stand out.
-		SpecialKey({ fg = tundora, bg = grey_one }), -- Unprintable characters: text displayed differently from what it really is.  But not 'listchars' whitespace. |hl-Whitespace|
-		SpellBad({ bg = old_brick }), -- Word that is not recognized by the spellchecker. |spell| Combined with the highlighting used otherwise.
-		SpellCap({ bg = dark_blue }), -- Word that should start with a capital. |spell| Combined with the highlighting used otherwise.
-		SpellLocal({ bg = casal }), -- Word that is recognized by the spellchecker as one that is used in another region. |spell| Combined with the highlighting used otherwise.
-		SpellRare({ bg = ripe_plum }), -- Word that is recognized by the spellchecker as one that is hardly ever used.  |spell| Combined with the highlighting used otherwise.
-		StatusLine({ fg = total_white, bg = grey_one }), -- status line of current window
-		StatusLineNC({ fg = silver, bg = grey_one }), -- status lines of not-current windows Note: if this is equal to "StatusLine" Vim will use "^^^" in the status line of the current window.
-		TabLine({ fg = cadet_blue, bg = total_black }), -- tab pages line, not active tab page label
-		TabLineFill({ fg = regent_grey }), -- tab pages line, where there are no labels
-		TabLineSel({ fg = mantis, bg = total_black }), -- tab pages line, active tab page label
-		Title({ fg = mantis }), -- titles for output from ":set all", ":autocmd" etc.
-		Visual({ bg = tundora }), -- Visual mode selection
-		-- VisualNOS    { }, -- Visual mode selection when vim is "Not Owning the Selection".
-		-- WarningMsg   { }, -- warning messages
-		-- Whitespace   { }, -- "nbsp", "space", "tab" and "trail" in 'listchars'
-		WildMenu({ fg = wewak, bg = cocoa_brown }), -- current match in 'wildmenu' completion
+		-- |more-prompt|
+		MoreMsg({ fg = highland }),
+		-- '@' at the end of the window, characters from 'showbreak' and other
+		-- characters that do not really exist in the text (e.g., ">" displayed
+		-- when a double-wide character doesn't fit at the end of the line).
+		-- See also |hl-EndOfBuffer|.
+		NonText({ fg = scorpion }),
+		FloatBorder({ bg = background, fg = ship_cove }),
+		-- Normal text in floating windows.
+		-- NormalFloat  { },
+		-- normal text in non-current windows
+		-- NormalNC     { },
+		-- Popup menu: normal item.
+		Pmenu({ fg = total_white, bg = background.lighten(4) }),
+		-- Popup menu: selected item.
+		PmenuSel({ fg = total_black, bg = ship_cove, gui = "bold" }),
+		-- Popup menu: scrollbar.
+		-- PmenuSbar    { },
+		-- Popup menu: Thumb of the scrollbar.
+		-- PmenuThumb   { },
+		-- |hit-enter| prompt and yes/no questions
+		Question({ fg = mantis }),
+		-- Current |quickfix| item in the quickfix window. Combined with |hl-CursorLine| when the cursor is there.
+		QuickFixLine({ bg = bright_grey }),
+		-- Unprintable characters: text displayed differently from what it really is.  But not 'listchars' whitespace. |hl-Whitespace|
+		SpecialKey({ fg = tundora, bg = grey_one }),
+		-- Word that is not recognized by the spellchecker. |spell| Combined with the highlighting used otherwise.
+		SpellBad({ bg = old_brick }),
+		-- Word that should start with a capital. |spell| Combined with the highlighting used otherwise.
+		SpellCap({ bg = dark_blue }),
+		-- Word that is recognized by the spellchecker as one that is used in another region. |spell| Combined with the highlighting used otherwise.
+		SpellLocal({ bg = casal }),
+		-- Word that is recognized by the spellchecker as one that is hardly ever used.  |spell| Combined with the highlighting used otherwise.
+		SpellRare({ bg = ripe_plum }),
+		-- status line of current window
+		StatusLine({ fg = total_white, bg = grey_one }),
+		-- status lines of not-current windows Note: if this is equal to "StatusLine" Vim will use "^^^" in the status line of the current window.
+		StatusLineNC({ fg = silver, bg = grey_one }),
+		-- tab pages line, not active tab page label
+		TabLine({ fg = cadet_blue, bg = total_black }),
+		-- tab pages line, where there are no labels
+		TabLineFill({ fg = regent_grey }),
+		-- tab pages line, active tab page label
+		TabLineSel({ fg = mantis, bg = total_black }),
+		-- titles for output from ":set all", ":autocmd" etc.
+		Title({ fg = mantis }),
+		-- Visual mode selection
+		Visual({ bg = tundora }),
+		-- Visual mode selection when vim is "Not Owning the Selection".
+		-- VisualNOS    { },
+		-- warning messages
+		-- WarningMsg   { },
+		-- "nbsp", "space", "tab" and "trail" in 'listchars'
+		-- Whitespace   { },
+		-- current match in 'wildmenu' completion
+		WildMenu({ fg = wewak, bg = cocoa_brown }),
 
 		-- These groups are not listed as default vim groups,
 		-- but they are defacto standard group names for syntax highlighting.
@@ -176,18 +239,20 @@ local theme = lush(function(injected_functions)
 		-- default,
 		-- Uncomment and edit if you want more specific syntax highlighting.
 
-		Constant({ fg = raw_sienna }), -- (preferred) any constant
+		-- (preferred) any constant
+		-- Constant({ fg = raw_sienna }),
+		Constant({ fg = perano }),
+		Character({ fg = raw_sienna }),
+		Number({ fg = raw_sienna }),
+		Boolean({ fg = raw_sienna }),
+		Float({ fg = raw_sienna }),
 		String({ fg = green_smoke }), --   a string constant: "this is a string"
 		StringDelimiter({ fg = costa_del_sol }),
-		-- Character      { }, --  a character constant: 'c', '\n'
-		-- Number         { }, --   a number constant: 234, 0xff
-		-- Boolean        { }, --  a boolean constant: TRUE, false
-		-- Float          { }, --    a floating point constant: 2.3e10
 
 		Identifier({ fg = biloba_flower }), -- (preferred) any variable name
 		Function({ fg = goldenrod }), -- function name (also: methods for classes)
 
-		Statement({ fg = perano }), -- (preferred) any statement
+		Statement({ fg = perano }),   -- (preferred) any statement
 		-- Conditional    { }, --  if, then, else, endif, switch, etc.
 		-- Repeat         { }, --   for, do, while, etc.
 		-- Label          { }, --    case, default, etc.
@@ -195,7 +260,7 @@ local theme = lush(function(injected_functions)
 		-- Keyword        { }, --  any other keyword
 		-- Exception      { }, --  try, catch, throw
 
-		PreProc({ fg = ship_cove }), -- (preferred) generic Preprocessor
+		PreProc({ fg = ship_cove }),    -- (preferred) generic Preprocessor
 		Include({ PreProc, gui = "italic" }), --  preprocessor #include
 		-- Define         { }, --   preprocessor #define
 		-- Macro          { }, --    same as Define
@@ -228,24 +293,24 @@ local theme = lush(function(injected_functions)
 		-- use these groups, or use their own. Consult your LSP client's
 		-- documentation.
 
-		LspReferenceText({ bg = background.lighten(8) }), -- used for highlighting "text" references
-		LspReferenceRead({ bg = background.lighten(8) }), -- used for highlighting "read" references
-		LspReferenceWrite({ bg = background.lighten(8) }), -- used for highlighting "write" references
+		LspReferenceText({ bg = background.lighten(8) }),                                             -- used for highlighting "text" references
+		LspReferenceRead({ bg = background.lighten(8) }),                                             -- used for highlighting "read" references
+		LspReferenceWrite({ bg = background.lighten(8) }),                                            -- used for highlighting "write" references
 
-		LspDiagnosticsDefaultError({ fg = old_brick.lighten(20) }), -- Used as the base highlight group. Other LspDiagnostic highlights link to this by default (except Underline)
-		LspDiagnosticsDefaultWarning({ fg = koromiko }), -- Used as the base highlight group. Other LspDiagnostic highlights link to this by default (except Underline)
-		LspDiagnosticsDefaultInformation({ fg = perano }), -- Used as the base highlight group. Other LspDiagnostic highlights link to this by default (except Underline)
-		LspDiagnosticsDefaultHint({ fg = tea_green }), -- Used as the base highlight group. Other LspDiagnostic highlights link to this by default (except Underline)
+		LspDiagnosticsDefaultError({ fg = old_brick.lighten(20) }),                                   -- Used as the base highlight group. Other LspDiagnostic highlights link to this by default (except Underline)
+		LspDiagnosticsDefaultWarning({ fg = koromiko }),                                              -- Used as the base highlight group. Other LspDiagnostic highlights link to this by default (except Underline)
+		LspDiagnosticsDefaultInformation({ fg = perano }),                                            -- Used as the base highlight group. Other LspDiagnostic highlights link to this by default (except Underline)
+		LspDiagnosticsDefaultHint({ fg = tea_green }),                                                -- Used as the base highlight group. Other LspDiagnostic highlights link to this by default (except Underline)
 
-		LspDiagnosticsVirtualTextError({ LspDiagnosticsDefaultError, bg = old_brick.darken(72) }), -- Used for "Error" diagnostic virtual text
+		LspDiagnosticsVirtualTextError({ LspDiagnosticsDefaultError, bg = old_brick.darken(72) }),    -- Used for "Error" diagnostic virtual text
 		LspDiagnosticsVirtualTextWarning({ LspDiagnosticsDefaultWarning, bg = koromiko.darken(88) }), -- Used for "Warning" diagnostic virtual text
 		LspDiagnosticsVirtualTextInformation({ LspDiagnosticsDefaultInformation, bg = perano.darken(87) }), -- Used for "Information" diagnostic virtual text
-		LspDiagnosticsVirtualTextHint({ LspDiagnosticsDefaultHint, bg = tea_green.darken(90) }), -- Used for "Hint" diagnostic virtual text
+		LspDiagnosticsVirtualTextHint({ LspDiagnosticsDefaultHint, bg = tea_green.darken(90) }),      -- Used for "Hint" diagnostic virtual text
 
-		LspDiagnosticsUnderlineError({ sp = old_brick.lighten(20), gui = "undercurl" }), -- Used to underline "Error" diagnostics
-		LspDiagnosticsUnderlineWarning({ sp = koromiko, gui = "undercurl" }), -- Used to underline "Warning" diagnostics
-		LspDiagnosticsUnderlineInformation({ sp = perano, gui = "undercurl" }), -- Used to underline "Information" diagnostics
-		LspDiagnosticsUnderlineHint({ sp = tea_green, gui = "undercurl" }), -- Used to underline "Hint" diagnostics
+		LspDiagnosticsUnderlineError({ sp = old_brick.lighten(20), gui = "undercurl" }),              -- Used to underline "Error" diagnostics
+		LspDiagnosticsUnderlineWarning({ sp = koromiko, gui = "undercurl" }),                         -- Used to underline "Warning" diagnostics
+		LspDiagnosticsUnderlineInformation({ sp = perano, gui = "undercurl" }),                       -- Used to underline "Information" diagnostics
+		LspDiagnosticsUnderlineHint({ sp = tea_green, gui = "undercurl" }),                           -- Used to underline "Hint" diagnostics
 
 		-- LspDiagnosticsFloatingError          { }, -- Used to color "Error" diagnostic messages in diagnostics float
 		-- LspDiagnosticsFloatingWarning        { }, -- Used to color "Warning" diagnostic messages in diagnostics float
@@ -264,7 +329,7 @@ local theme = lush(function(injected_functions)
 		-- you explicitly want to support Treesitter's improved syntax awareness.
 
 		-- TSAnnotation                 { };    -- For C++/Dart attributes, annotations that can be attached to the code to denote some kind of meta information.
-		-- TSAttribute                  { };    -- (unstable) TODO: docs
+		-- TSAttribute                  { };    -- (unstable)
 		-- TSBoolean                    { };    -- For booleans.
 		-- TSCharacter                  { };    -- For characters.
 		-- TSComment                    { };    -- For comment blocks.
@@ -286,7 +351,7 @@ local theme = lush(function(injected_functions)
 		-- TSLabel                      { };    -- For labels: `label:` in C and `:label:` in Lua.
 		-- TSMethod                     { };    -- For method calls and definitions.
 		sym("@namespace")({ fg = wewak }), -- For identifiers referring to modules and namespaces.
-		-- TSNone                       { };    -- TODO: docs
+		-- TSNone                       { };
 		-- TSNumber                     { };    -- For all numbers
 		-- TSOperator                   { };    -- For any operator: `+`, but also `->` and `*` in C.
 		-- TSParameter                  { };    -- For parameters of a function.
@@ -308,8 +373,8 @@ local theme = lush(function(injected_functions)
 		-- TSTag                        { };    -- Tags like html tag names.
 		sym("@tag.delimiter")({ fg = bayoux_blue }), -- Tag delimiter like `<` `>` `/`
 		-- TSText                       { };    -- For strings considered text in a markup language.
-		sym("@text.emphasis")({ Italic }), -- For text to be represented with emphasis.
-		sym("@text.underline")({ Underlined }), -- For text to be represented with an underline.
+		sym("@text.emphasis")({ Italic }),        -- For text to be represented with emphasis.
+		sym("@text.underline")({ Underlined }),   -- For text to be represented with an underline.
 		sym("@text.strike")({ gui = "strikethrough" }), -- For strikethrough text.
 		-- TSTitle                      { };    -- Text that is part of a title.
 		-- TSLiteral                    { };    -- Literal text.
@@ -344,6 +409,21 @@ local theme = lush(function(injected_functions)
 		NvimTreeGitRenamed({ GitSignsChange }),
 		NvimTreeGitNew({ GitSignsAdd }),
 		NvimTreeGitDeleted({ GitSignsDelete }),
+
+		-- neo-tree
+		NeoTreeFloatNormal({ bg = background, fg = foreground }),
+		NeoTreeFloatBorder({ bg = background, fg = ship_cove }),
+
+		Stl9b9ea4_07080d__({ Normal }),
+		DapUINormalNC({ bg = background }),
+		DapUIPlayPauseNC { bg = background, fg = "#a9ff68", },
+		DapUIRestartNC { bg = background, fg = "#a9ff68", },
+		DapUIStopNC { bg = background, fg = "#f70067", },
+		DapUIUnavailableNC { bg = background, fg = "#424242", },
+		DapUIStepOverNC { bg = background, fg = "#00f1f5", },
+		DapUIStepIntoNC { bg = background, fg = "#00f1f5", },
+		DapUIStepBackNC { bg = background, fg = "#00f1f5", },
+		DapUIStepOutNC { bg = background, fg = "#00f1f5", },
 	}
 end)
 
