@@ -114,6 +114,8 @@ local theme = lush(function(injected_functions)
 
 		-- normal text
 		Normal({ bg = background, fg = foreground }),
+		-- Normal text in floating windows.
+		NormalFloat({ Normal }),
 		-- any comment
 		Comment({ fg = grey }),
 		-- used for the columns set with 'colorcolumn'
@@ -184,8 +186,6 @@ local theme = lush(function(injected_functions)
 		-- See also |hl-EndOfBuffer|.
 		NonText({ fg = scorpion }),
 		FloatBorder({ bg = background, fg = ship_cove }),
-		-- Normal text in floating windows.
-		-- NormalFloat  { },
 		-- normal text in non-current windows
 		-- NormalNC     { },
 		-- Popup menu: normal item.
