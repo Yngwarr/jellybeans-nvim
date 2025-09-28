@@ -115,7 +115,7 @@ local theme = lush(function(injected_functions)
 		-- normal text
 		Normal({ bg = background, fg = foreground }),
 		-- Normal text in floating windows.
-		NormalFloat({ Normal }),
+		NormalFloat({ fg = Normal.fg, bg = grey_three }),
 		-- any comment
 		Comment({ fg = grey }),
 		-- used for the columns set with 'colorcolumn'
