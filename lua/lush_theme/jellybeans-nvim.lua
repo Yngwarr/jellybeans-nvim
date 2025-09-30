@@ -424,6 +424,10 @@ local theme = lush(function(injected_functions)
 		DapUIStepIntoNC { bg = background, fg = "#00f1f5", },
 		DapUIStepBackNC { bg = background, fg = "#00f1f5", },
 		DapUIStepOutNC { bg = background, fg = "#00f1f5", },
+
+		-- snacks
+		SnacksPickerBorder({ fg = ship_cove, bg = Normal.bg }),
+		SnacksPicker({ Normal })
 	}
 end)
 
